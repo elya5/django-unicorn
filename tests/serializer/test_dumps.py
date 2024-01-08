@@ -162,9 +162,9 @@ def test_complicated_model():
     expected = {
         "date": str(model.date),
         "datetime": model.datetime.isoformat()[:-3],
-        "decimal_value": "0.984",
+        "decimal_value": "django-unicorn-float-0.984",
         "duration": "-1 19:00:00",
-        "float_value": "0.583",
+        "float_value": "django-unicorn-float-0.583",
         "name": "abc",
         "pk": 2,
         "time": str(model.time)[:-3],
@@ -646,35 +646,35 @@ def test_get_model_dict_many_to_many_references_model():
 
 
 def test_float():
-    expected = '{"name":"0.0"}'
+    expected = '{"name":"django-unicorn-float-0.0"}'
     actual = serializer.dumps({"name": 0.0})
 
     assert expected == actual
 
 
 def test_dict_float():
-    expected = '{"name":{"another":"0.0"}}'
+    expected = '{"name":{"another":"django-unicorn-float-0.0"}}'
     actual = serializer.dumps({"name": {"another": 0.0}})
 
     assert expected == actual
 
 
 def test_list_float():
-    expected = '{"name":[1,2,"0.0"]}'
+    expected = '{"name":[1,2,"django-unicorn-float-0.0"]}'
     actual = serializer.dumps({"name": [1, 2, 0.0]})
 
     assert expected == actual
 
 
 def test_nested_list_float():
-    expected = '{"name":{"blob":[1,2,"0.0"]}}'
+    expected = '{"name":{"blob":[1,2,"django-unicorn-float-0.0"]}}'
     actual = serializer.dumps({"name": {"blob": [1, 2, 0.0]}})
 
     assert expected == actual
 
 
 def test_nested_list_float_complicated():
-    expected = '{"another":[{"great":"1.0","ok":["1.6","0.0",4]}],"more":["1.9",2,5],"name":{"blob":[1,2,"0.0"]}}'
+    expected = '{"another":[{"great":"django-unicorn-float-1.0","ok":["django-unicorn-float-1.6","django-unicorn-float-0.0",4]}],"more":["django-unicorn-float-1.9",2,5],"name":{"blob":[1,2,"django-unicorn-float-0.0"]}}'
     actual = serializer.dumps(
         {
             "name": {"blob": [1, 2, 0.0]},
@@ -687,12 +687,19 @@ def test_nested_list_float_complicated():
 
 
 def test_nested_list_float_less_complicated():
-    expected = '{"another":[{"great":"1.0","ok":["1.6","0.0",4]}]}'
+    expected = '{"another":[{"great":"django-unicorn-float-1.0","ok":["django-unicorn-float-1.6","django-unicorn-float-0.0",4]}]}'
     actual = serializer.dumps(
         {
             "another": [{"great": 1.0, "ok": [1.6, 0.0, 4]}],
         }
     )
+
+    assert expected == actual
+
+
+def test_float_loading():
+    expected = {"name": 0.0}
+    actual = serializer.loads('{"name":"django-unicorn-float-0.0"}')
 
     assert expected == actual
 

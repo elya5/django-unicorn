@@ -16,6 +16,7 @@ from django_unicorn.errors import (
     MultipleRootComponentElementError,
     NoRootComponentElementError,
 )
+from django_unicorn.serializer import loads
 from django_unicorn.settings import get_minify_html_enabled, get_script_location
 from django_unicorn.utils import generate_checksum, sanitize_html
 
@@ -136,7 +137,7 @@ potentially cause errors in Unicorn."
             )
 
         frontend_context_variables = self.component.get_frontend_context_variables()
-        frontend_context_variables_dict = orjson.loads(frontend_context_variables)
+        frontend_context_variables_dict = loads(frontend_context_variables)
         checksum = generate_checksum(frontend_context_variables_dict)
 
         # Use `html.parser` and not `lxml` because in testing it was no faster even with `cchardet`

@@ -2,6 +2,7 @@ import logging
 from datetime import timedelta
 from decimal import Decimal
 from functools import lru_cache
+import re
 from types import MappingProxyType
 from typing import Any, Dict, List, Optional, Tuple
 
@@ -283,7 +284,7 @@ def _fix_floats(current: Dict, data: Optional[Dict] = None, paths: Optional[List
             if idx == len(paths) - 1:
                 # `path` can be a dictionary key or list index,
                 # but in either instance it is set the same way
-                _piece[path] = str(current)
+                _piece[path] = 'django-unicorn-float-' + str(current)
             else:
                 _piece = _piece[path]
 
@@ -431,7 +432,9 @@ def loads(string: str) -> dict:
     """
 
     try:
-        return orjson.loads(string)
+        if isinstance(string, bytes):
+            string = string.decode()
+        return orjson.loads(re.sub(r'"django-unicorn-float-(\d+.\d+)"', r'\1', string))
     except orjson.JSONDecodeError as e:
         raise JSONDecodeError from e
 
